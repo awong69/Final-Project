@@ -1,0 +1,700 @@
+/*////////////////////////////////Global Variables////////////////////////////////////////*/
+var currentScene = 0; // 0 = Start Menu, 1 = Help Menu, 2 = Day Level, 3 = Night level, 4 = Space Level, 5 = Win Screen
+var obstacles1 = []; // Obstacles for the first level
+var obstacles2 = []; // Obstacles for the second level
+var obstacles3 = []; // Obstacles for the third level
+var obstaclesPassed = 0; // Counts how many obstacles the ball passed
+var skips = 0; // Counts how many times the player uses the skip button
+
+
+/*///////////////////////////////Bitmoji Functions////////////////////////////////////////*/
+var drawRyanBitmoji = function(x, y, h){
+stroke(0, 0, 0);
+fill(199, 195, 195); 
+ellipse(x + (h/100*200), y + (h/100*249), (h/100*(213/2)), (h/100*(100/2)));//hood
+noStroke();
+fill(252, 235, 166);
+rect(x + (h/100*193),y + (h/100*200), (h/100*(15)), (h/100*50));//neck
+fill(252, 235, 166);
+ellipse(x + (h/100*200), y + (h/100*200), (h/100*75), (h/100*90)); //head
+fill(255, 255, 255);
+ellipse(x + (h/100*185), y+(h/100*190), (h/100*15), (h/100*10)); //left eye socket
+ellipse(x + (h/100*215), y + (h/100*190), (h/100*15), (h/100*10)); //right eye socket
+fill(97, 89, 52);
+ellipse(x + (h/100*185), y + (h/100*190), (h/100*(15/2)), (h/100*(15/2))); //left iris
+ellipse(x + (h/100*215), y + (h/100*190), (h/100*(15/2)), (h/100*(15/2))); //right iris
+fill(0, 0, 0);
+ellipse(x + (h/100*185), y + (h/100*190), (h/100*(5/2)), (h/100*(5/2))); //left pupil
+ellipse(x + (h/100*215), y + (h/100*190), (h/100*(5/2)), (h/100*(5/2))); //right pupil
+stroke(0, 0, 0);
+strokeWeight(1);
+line(x + (h/100*208), y + (h/100*215), x + (h/100*203), y + (h/100*200)); //long line of nose
+line(x + (h/100*198), y + (h/100*215), x + (h/100*208), y + (h/100*215)); //short bottom line of nose
+fill(252, 247, 247);
+arc(x + (h/100*200), y + (h/100*225), (h/100*25), (h/100*20),1,180); //mouth
+line(x + (h/100*189), y + (h/100*228), x + (h/100*210), y + (h/100*228)); //teeth line
+line(x + (h/100*186), y + (h/100*225), x + (h/100*213), y + (h/100*225)); //top line of mouth
+noStroke();
+fill(115, 91, 64);
+rect(x + (h/100*160), y + (h/100*170), (h/100*(15/2)), (h/100*35));//left sideburn
+rect(x + (h/100*230), y + (h/100*170), (h/100*(15/2)), (h/100*35));//right sideburn
+stroke(115, 91, 64);
+strokeWeight(10);
+line(x + (h/100*184), y + (h/100*151), x + (h/100*169), y + (h/100*173));//hair
+line(x + (h/100*194), y + (h/100*151), x + (h/100*179), y + (h/100*173));
+line(x + (h/100*204), y + (h/100*151), x + (h/100*189), y + (h/100*173));
+line(x + (h/100*214), y + (h/100*151), x + (h/100*199), y + (h/100*173));
+line(x + (h/100*224), y + (h/100*151), x + (h/100*209), y + (h/100*173));
+line(x + (h/100*234), y + (h/100*151), x + (h/100*219), y + (h/100*173));
+line(x + (h/100*244), y + (h/100*151), x + (h/100*230), y + (h/100*173));
+line(x + (h/100*169), y + (h/100*157), x + (h/100*169), y + (h/100*172));//hair
+noStroke();
+fill(0, 0, 0);
+ellipse(x + (h/100*200), y + (h/100*170), (h/100*120), (h/100*10)); //base of hat
+quad(x + (h/100*155), y + (h/100*170), x + (h/100*245), y + (h/100*170), x + (h/100*221), y + (h/100*125), x + (h/100*184), y + (h/100*125)); //top of hat
+fill(255, 255, 255);
+arc(x + (h/100*203), y + (h/100*125), (h/100*27), (h/100*17),1,180); //chunk out of hat
+fill(199, 195, 195);
+stroke(0, 0, 0);
+strokeWeight(1);
+quad(x + (h/100*125), y + (h/100*325), x + (h/100*275), y + (h/100*325), x + (h/100*240), y + (h/100*250), x + (h/100*160), y + (h/100*250)); //body
+stroke(0, 0, 0);
+strokeWeight(1);
+line(x + (h/100*154), y + (h/100*170), x + (h/100*178), y + (h/100*241)); //left string of hat
+line(x + (h/100*244), y + (h/100*170), x + (h/100*220), y + (h/100*241)); //right string of hat
+line(x + (h/100*200), y + (h/100*265), x + (h/100*178), y + (h/100*241)); //left bottom string
+line(x + (h/100*200), y + (h/100*265), x + (h/100*220), y + (h/100*241)); //right bottom string
+noStroke();
+fill(0, 0, 0);
+rect(x + (h/100*192), y + (h/100*260), (h/100*15), (h/100*(13/2))); //adjustable hat piece
+stroke(0, 0, 0);
+strokeWeight(1);
+line(x + (h/100*195), y + (h/100*280), x + (h/100*200), y + (h/100*265)); //left end of string
+line(x + (h/100*206), y + (h/100*280), x + (h/100*200), y + (h/100*265)); //right end of string
+line(x + (h/100*173), y + (h/100*268), x + (h/100*151), y + (h/100*325)); //line of left arm
+line(x + (h/100*228), y + (h/100*268), x + (h/100*247), y + (h/100*325)); //line of right arm
+
+line(x + (h/100*180), y + (h/100*305), x + (h/100*180), y + (h/100*285)); //R Initial on hoodie
+line(x + (h/100*180), y + (h/100*285), x + (h/100*190), y + (h/100*285));
+line(x + (h/100*190), y + (h/100*285), x + (h/100*190), y + (h/100*295));
+line(x + (h/100*180), y + (h/100*295), x + (h/100*190), y + (h/100*295));
+line(x + (h/100*190), y + (h/100*305), x + (h/100*180), y + (h/100*295));
+
+line(x + (h/100*205), y + (h/100*285), x + (h/100*215), y + (h/100*285)); //J Initial on hoodie
+line(x + (h/100*210), y + (h/100*305), x + (h/100*210), y + (h/100*285));
+line(x + (h/100*205), y + (h/100*305), x + (h/100*210), y + (h/100*305));
+line(x + (h/100*210), y + (h/100*305), x + (h/100*210), y + (h/100*285));
+line(x + (h/100*205), y + (h/100*305), x + (h/100*205), y + (h/100*300));
+
+};
+var drawAaronBitmoji = function(xpos,ypos,wongheight){
+    noStroke();
+    fill(255,205,148);
+    ellipse(xpos-(wongheight/150*0),ypos-(wongheight/150*0),wongheight/150*88,wongheight/150*100); //head
+    
+    fill(207, 170, 207);
+    arc(xpos-(wongheight/150*42),ypos+(wongheight/150*37),wongheight/150*36,wongheight/150*69,0,361); //left chisel
+    arc(xpos+(wongheight/150*42),ypos+(wongheight/150*37),wongheight/150*36,wongheight/150*69,0,381); //right chisel
+    fill(54, 41, 56);
+    
+    quad(xpos-(wongheight/150*50),ypos-(wongheight/150*0),xpos-(wongheight/150*37),ypos    -(wongheight/150*32),xpos-(wongheight/150*10),ypos-(wongheight/150*50),xpos-(wongheight/150*30),ypos-(wongheight/150*-8));//left hair 
+    quad(xpos+(wongheight/150*49),ypos-(wongheight/150-2),xpos+(wongheight/150*34),ypos    -(wongheight/150*32),xpos+(wongheight/150*13),xpos-(wongheight/150*50),xpos+(wongheight/150*32),ypos-(wongheight/150*-5));//right hair
+
+    ellipse(xpos-(wongheight/150*0),ypos-(wongheight/150*37),wongheight/150*62,wongheight/150*28); //top hair
+    fill(115,23,23);
+    ellipse(xpos-(wongheight/150*10),ypos-(wongheight/150*0),wongheight/150*7,wongheight/150*5); //left eye
+    ellipse(xpos+(wongheight/150*14),ypos-(wongheight/150*0),wongheight/150*7,wongheight/150*5); //right eye
+    stroke(0, 0, 0); //stroke nose
+    fill(255,205,148);//nose skin color
+    bezier(xpos+(wongheight/150*2),ypos+(wongheight/150*1),xpos+(wongheight/150*27        ),ypos+(wongheight/150*25),xpos-(wongheight/150*8),ypos+(wongheight/150*26),xpos        -(wongheight/150*4),ypos+(wongheight/150*14)); //nose
+    fill(255, 255, 255); //white teeth
+    arc(xpos-(wongheight/150*4),ypos+(wongheight/150*27),wongheight/150*41,wongheight/150*13,1,106); //mouth
+    line(xpos-(wongheight/150*8),ypos+(wongheight/150*26),xpos+(wongheight/150*16),ypos+(wongheight/150*26)); //top of mouth 
+
+    fill(90, 189, 204);
+    rect(xpos-(wongheight/150*39),ypos+(wongheight/150*51),wongheight/150*81,wongheight/150*82);//shirt
+    fill(15, 14, 14);
+    textSize(wongheight/150*38);
+    text("AW",xpos-(wongheight/150*30),ypos+(wongheight*91));
+
+    fill(207, 192, 192);
+    rect(xpos-(wongheight/150*32),ypos-(wongheight/150*63),wongheight/150*60,wongheight/150*25);
+    rect(xpos-(wongheight/150*33),ypos-(wongheight/150*50),wongheight/150*92,wongheight/150*19);//hat
+    
+};
+
+/*//////////////////////////////////Ball Class////////////////////////////////////////////*/
+var drawBall = function(x, y, h){
+    ellipse(x + (h/100*200), y + (h/100*200), (h/100*50), (h/100*50));
+    fill(255, 0, 0);
+    arc(x + (h/100*200), y + (h/100*200), (h/100*50), (h/100*50), 0, 120);
+    fill(0, 77, 255);
+    arc(x + (h/100*200), y + (h/100*200), (h/100*50), (h/100*50), 120, 240);
+    fill(242, 255, 0);
+    arc(x + (h/100*200), y + (h/100*200), (h/100*50), (h/100*50), 240, 360);
+}; //Function that draws the ball
+
+var Ball = function(x, y, h) { // Constructor Function
+	this.x = x;
+	this.y = y;
+	this.h = h;
+}; //Constructor function for the ball
+
+
+Ball.prototype.draw = function() { //Draw Method
+    this.y = constrain(this.y, -65, 250);
+    drawBall(this.x, this.y, this.h);
+}; //Draw method that calls the drawBall function
+Ball.prototype.hop = function() { //Hop Method
+	this.y -= 5;
+}; //Hop method that makes the ball move up
+Ball.prototype.fall = function() { //Fall Method
+	this.y += 5;
+}; //Fall method that makes the ball move down
+
+Ball.prototype.checkForObstacle = function(obstacle) { 
+	if ((this.x + 75 < obstacle.x + 25 && this.x + 75 > obstacle.x - 25) && (this.y + 110 > obstacle.y || this.y + 110 < obstacle.y - obstacle.hole)) {
+		obstacle.y = -1000; 
+		obstacle.x = 100000;
+		obstaclesPassed--;
+		
+	}
+}; //Checking for obstacle method that tells the program when the ball touches an obstacle. If the ball touches an obstacle it subtracts one from the obstaclesPassed variable, as well as moves the wall off the screen.
+
+var gameBall = new Ball(-50, 250, 50); //Creating the gameball from the constructor function
+
+
+/*////////////////////////////////Obstacle Class//////////////////////////////////////////*/
+var Obstacle = function(x, y, h, hole, r, g, b) {
+	this.x = x;
+	this.y = y;
+	this.h = h;
+	this.hole = hole; // This controls the space between the two rectangles
+	this.r = r; //Red value
+	this.g = g; //Green value
+	this.b = b; //Blue value
+}; //Obstacle Constructor Function
+
+Obstacle.prototype.draw = function() {
+	noStroke();
+    fill(this.r, this.g, this.b);
+    rect(this.x, this.y, 30, this.h); //Bottom rectangle
+    rect(this.x, 0, 30, this.y - this.hole); // Top rectangle
+}; //Draw method that creates the obstacles
+	
+for (var i = 0; i < 200; i++) {
+	obstacles1.push(new Obstacle((200 * i) + 600, random(55, 350), 350, 70, 70, 130, 64));
+} //Pushes all the obstacles into the first level array at random y values. The fourth parameter controls how big the hole is for the level!
+
+for (var i = 0; i < 200; i++) {
+	obstacles2.push(new Obstacle((200 * i) + 600, random(55, 350), 350, 65, 64, 112, 58));
+} //Pushes all the obstacles into the second level array at random y values. The hole is a little smaller for this level.
+
+for (var i = 0; i < 200; i++) {
+	obstacles3.push(new Obstacle((200 * i) + 600, random(55, 350), 350, 50, 100, 0, 100));
+} //Pushes all the obstacles into the third level array at random y values. The hole is EVEN SMALLER for this one!
+
+
+/*//////////////////////////////////Button Class//////////////////////////////////////////*/
+var Button = function(config) {
+	this.x = config.x || 0;
+	this.y = config.y || 0;
+	this.width = config.width || 75;
+	this.height = config.height || 50;
+	this.label = config.label || "Click";
+	this.onClick = config.onClick || function() {};
+}; //Button Cunstructor Function
+
+Button.prototype.draw = function() {
+	fill(204, 0, 255);
+	rect(this.x, this.y, this.width, this.height, 5);
+	fill(0, 0, 0);
+	textSize(19);
+	textAlign(LEFT, TOP);
+	text(this.label, this.x + 10, this.y + this.height / 4);
+}; //Draw method that creates the button
+
+Button.prototype.isMouseInside = function() {
+	return mouseX > this.x && mouseX < (this.x + this.width) && mouseY > this.y && mouseY < (this.y + this.height);
+}; //"Is mouse inside" method that checks your mouseX and mouseY values and sees if it's inside the button
+
+Button.prototype.handleMouseClick = function() {
+	if (this.isMouseInside()) {
+		this.onClick();
+	}
+}; // "handle Mouse Click" function that makes the button do what you tell it to do when you click on it
+
+var startButton = new Button({
+	x: 120,
+	y: 235,
+	width: 150,
+	label: "        Play!",
+	onClick: function() {
+		currentScene = 2;
+	}
+}); //The play button to start the game!
+
+var helpButton = new Button({
+    x: 120,
+	y: 300,
+	width: 150,
+	label: "        Help!",
+	onClick: function() {
+		currentScene = 1;
+	}
+}); //The button that gives you instructions!
+
+var backButton = new Button({
+    x: 120,
+	y: 300,
+	width: 150,
+	label: "Back to Menu",
+	onClick: function() {
+		currentScene = 0;
+	}
+}); //The button to get out of the help menu!
+
+var skipButton = new Button({
+    x: 334,
+	y: 366,
+	width: 60,
+	height: 30,
+	label: "SKIP",
+	onClick: function() {
+		currentScene++;
+		obstaclesPassed = 0;
+		skips++;
+	}
+}); //The skip button in case your stuck! This button also resets the obstaclesPassed variable, and adds 1 to the skips variable
+
+
+/* ////////////////////////////////Scenes//////////////////////////////////////////////// */
+var startScreen = function(){
+    background(224, 159, 235);
+    fill(166, 0, 255);
+    textSize(50);
+    text("FLUTTER BALL", 23, 14); // Title
+    fill(0, 0, 0);
+    textSize(20);
+    text("Aaron Wong", 220, 186);
+    text("Ryan Jensen", 60, 184);
+    startButton.draw(); //The Start Button
+    helpButton.draw(); //The Help Button
+    drawRyanBitmoji(18, 14, 50);
+    drawAaronBitmoji(270,108,80);
+}; //Start Menu
+
+var helpScreen = function(){
+    background(247, 168, 244);
+    fill(157, 0, 255);
+    text("Controls:", 15, 25); //Controls
+    fill(0, 0, 0);
+    text("CLICK - Press Button", 15, 50);
+    text("UP ARROW - Move Up", 15, 70);
+    text("DOWN ARROW - Move Down", 15, 90); //Controls
+    fill(157, 0, 255);
+    text("Goal:", 15, 120); //Goal or Instructions
+    fill(0, 0, 0);
+    text("Navigate through the holes with the ball!", 15, 145);
+    text("Every time you pass through a hole you get", 15, 175);
+    text("a point!", 15, 195);
+    text("Get enough points to advance to the next", 15, 255);
+    text("Hit a wall? Lose a point!", 15, 225);
+    text("level! Good luck!", 15, 275); //Goal or Instructions
+    backButton.draw(); //Back Button
+}; //Help Menu
+    
+var levelOne = function(){
+    background(166, 252, 245);//Sky
+    noStroke();
+    fill(148, 242, 176);
+    ellipse(25, 375, 201, 314); //Hills
+    fill(180, 240, 173);
+    ellipse(126, 384, 251, 412);
+    fill(184, 242, 187);
+    ellipse(245, 414, 251, 412);
+    fill(170, 235, 176);
+    ellipse(381, 414, 251, 412);//Hills
+    fill(225, 255, 0);
+    ellipse(250, 65, 100, 100); //Sun
+    fill(232, 216, 216);
+    ellipse(61, 57, 100, 50); //Clouds
+    fill(207, 191, 191);
+    ellipse(95, 36, 100, 50);
+    fill(219, 202, 202);
+    ellipse(120, 53, 100, 50);
+    fill(232, 216, 216);
+    noStroke();
+    ellipse(61+200, 57+10, 100, 50);
+    fill(207, 191, 191);
+    ellipse(95+200, 36+10, 100, 50);
+    fill(219, 202, 202);
+    ellipse(120+200, 53+10, 100, 50);//Clouds
+    fill(70, 130, 64);
+    rect(0, 363, 400, 45); //Grass
+    noFill();
+    stroke(0, 0, 0);
+    arc(55, 102, 20, 20, 190, 350);//Birds
+    arc(76, 102, 20, 20, 190, 350);
+    arc(55+100, 102+50, 20, 20, 190, 350);
+    arc(76+100, 102+50, 20, 20, 190, 350);
+    arc(55+250, 102+35, 20, 20, 190, 350);
+    arc(76+250, 102+35, 20, 20, 190, 350); //Birds
+    
+    if (keyIsPressed && keyCode === UP) { //Makes Ball rise using the UP arrow
+			gameBall.hop();
+		} else if (keyIsPressed && keyCode === DOWN) { //Makes Ball fall using DOWN arrow
+		    gameBall.fall();
+		}
+		
+		gameBall.draw(); //The game ball drawing
+		
+		for (var i = 0; i < obstacles1.length; i++){ // A for loop drawing all the obstacles
+            obstacles1[i].draw(); //Draw method being used
+            gameBall.checkForObstacle(obstacles1[i]); //Check for obstacle method being used
+            obstacles1[i].x -= 3; // This makes the obstacles move left!
+                if (obstacles1[i].x < 10){ // When the obstacle goes past the ball, it gets moved off the screen
+                    obstaclesPassed++; // +1 gets added to obstaclesPassed
+                    obstacles1[i].x += 100000; //Obstacle gets moved off the screen
+                 }
+            }
+    skipButton.draw(); // Drawing the skip button
+    
+    if (obstaclesPassed === 20){ //When obstaclesPassed = 20, you advance to the next level
+        currentScene++;
+        obstaclesPassed = 0; //Resets the obstaclesPassed variable
+    }
+    
+    fill(250, 250, 250);
+    rect(0, 0, 87, 20);
+    fill(0, 0, 0);
+    text("Points: " + obstaclesPassed, 0, 0); // This tells you your points
+    
+    fill(255, 252, 252);
+    rect(324, 0, 76, 20);
+    fill(0, 0, 0);
+    text("Goal: 20", 326, 0); //This is how many points you need to advance!
+}; //Day Level
+
+var levelTwo = function(){
+    noStroke();
+    background(21, 30, 48);
+    fill(27, 61, 36);
+    ellipse(25, 375, 201, 314); //Hills
+    fill(47, 71, 44);
+    ellipse(126, 384, 251, 412);
+    fill(48, 66, 49);
+    ellipse(245, 414, 251, 412);
+    fill(55, 71, 57);
+    ellipse(381, 414, 251, 412);//Hills
+    fill(64, 112, 58);
+    rect(0, 363, 400, 45); //Grass
+    fill(234, 235, 155);
+    ellipse(23, 18, 5, 5); //Stars
+    ellipse(37, 50, 5, 5);
+    ellipse(114, 56, 5, 5);
+    ellipse(76, 28, 5, 5);
+    ellipse(155, 93, 5, 5);
+    ellipse(31, 83, 5, 5);
+    ellipse(55, 118, 5, 5);
+    ellipse(80, 77, 5, 5);
+    ellipse(19, 149, 5, 5);
+    ellipse(136, 23, 5, 5);
+    ellipse(106, 141, 5, 5);
+    ellipse(182, 10, 5, 5);
+    ellipse(191, 53, 5, 5);
+    ellipse(212, 182, 5, 5);
+    ellipse(161, 130, 5, 5);
+    ellipse(219, 113, 5, 5);
+    ellipse(236, 28, 5, 5);
+    ellipse(246, 61, 5, 5);
+    ellipse(280, 96, 5, 5);
+    ellipse(258, 151, 5, 5);
+    ellipse(312, 52, 5, 5);
+    ellipse(285, 35, 5, 5);
+    ellipse(313, 180, 5, 5);
+    ellipse(304, 126, 5, 5);
+    ellipse(330, 90, 5, 5);
+    ellipse(375, 158, 5, 5);
+    ellipse(343, 135, 5, 5);
+    ellipse(369, 108, 5, 5);
+    ellipse(359, 66, 5, 5);
+    ellipse(354, 26, 5, 5); //Stars
+    fill(227, 214, 219);
+    ellipse(300, 76, 100, 100); // Moon
+    fill(125, 118, 118);
+    ellipse(315, 50, 15, 15);
+    ellipse(339, 69, 15, 15);
+    ellipse(316, 110, 15, 15);
+    ellipse(283, 45, 15, 15); // Moon
+    fill(21, 30, 48);
+    ellipse(288, 82, 85, 85);
+    fill(234, 235, 155);
+    ellipse(280, 96, 5, 5);
+    ellipse(301, 64, 5, 5);
+    
+    if (keyIsPressed && keyCode === UP) {
+			gameBall.hop();
+		} else if (keyIsPressed && keyCode === DOWN) {
+		    gameBall.fall();
+		}
+		gameBall.draw();
+		
+		for (var i = 0; i < obstacles2.length; i++){ //This for loop is using the obstacles2 Array now instead of the first one!
+            obstacles2[i].draw();
+            gameBall.checkForObstacle(obstacles2[i]); 
+            obstacles2[i].x -= 3.5; //The second level is a little faster!
+             if (obstacles2[i].x < 10){
+                    obstaclesPassed++;
+                    obstacles2[i].x += 100000; 
+                 }
+		}
+		skipButton.draw();
+		
+		if (obstaclesPassed === 25){ //Instead of 20 obstacles being passed to advance, you need to pass 25!
+        currentScene++;
+        obstaclesPassed = 0;
+    }
+    
+    fill(250, 250, 250);
+    rect(0, 0, 87, 20);
+    fill(0, 0, 0);
+    text("Points: " + obstaclesPassed, 0, 0);
+    
+    fill(255, 252, 252);
+    rect(324, 0, 76, 20);
+    fill(0, 0, 0);
+    text("Goal: 25", 326, 0);
+}; //Night Level
+
+var levelThree = function(){
+    noStroke();
+    background(12, 7, 48);
+    fill(245, 239, 210);
+    ellipse(69, 126, 5, 5); //Big Dipper Constellation
+    ellipse(136, 117, 5, 5);
+    ellipse(170, 134, 5, 5);
+    ellipse(206, 145, 5, 5);
+    ellipse(293, 157, 5, 5);
+    ellipse(220, 193, 5, 5);
+    ellipse(279, 198, 5, 5);
+    stroke(237, 222, 135);
+    line(69, 126, 136, 117);
+    line(136, 117, 170, 134);
+    line(170, 134, 206, 145);
+    line(206, 145, 293, 157);
+    line(293, 157, 279, 198);
+    line(279, 198, 220, 193);
+    line(220, 193, 206, 145); //Big Dipper Constellation
+    noStroke();
+    fill(191, 76, 76);
+    ellipse(49, 356, 200, 200);//Red Planet
+    fill(199, 67, 44);
+    ellipse(40, 300, 50, 50);
+    ellipse(83, 342, 30, 30);
+    ellipse(25, 400, 40, 40); //Red Planet
+    fill(31, 223, 240);
+    ellipse(405, 249, 200, 200); //Blue and Green Planet
+    fill(46, 230, 89);
+    ellipse(363, 249, 100, 143);
+    fill(31, 223, 240);
+    ellipse(362, 249, 80, 130);
+    fill(46, 230, 89);
+    ellipse(363, 249, 60, 110);
+    fill(31, 223, 240);
+    ellipse(362, 249, 40, 90); //Blue and Green Planet
+    fill(208, 0, 255);
+    ellipse(200, 1, 200, 200); //Purple and Pink Planet
+    fill(255, 0, 247);
+    ellipse(200, 1, 150, 150);
+    fill(208, 0, 255);
+    ellipse(200, 1, 100, 100);
+    fill(255, 0, 247);
+    ellipse(200, 1, 50, 50); //Purple and Pink Planet
+    fill(71, 69, 49);
+    ellipse(240, 287, 50, 50); //Comet
+    fill(59, 52, 43);
+    ellipse(240, 300, 15, 15);
+    ellipse(231, 278, 10, 10);
+    ellipse(249, 280, 20, 20);
+    stroke(255, 255, 255);
+    line(240, 318, 249, 338);
+    line(255, 311, 264, 328);
+    line(267, 301, 289, 332); //Comet
+    noStroke();
+    fill(253, 255, 140);
+    ellipse(20, 20, 10, 10); //Stars
+    ellipse(58, 56, 10, 10);
+    ellipse(28, 99, 10, 10);
+    ellipse(51, 164, 10, 10);
+    ellipse(119, 150, 10, 10);
+    ellipse(84, 220, 10, 10);
+    ellipse(29, 209, 10, 10);
+    ellipse(145, 203, 10, 10);
+    ellipse(166, 253, 10, 10);
+    ellipse(203, 215, 10, 10);
+    ellipse(177, 317, 10, 10);
+    ellipse(206, 370, 10, 10);
+    ellipse(273, 359, 10, 10);
+    ellipse(269, 233, 10, 10);
+    ellipse(258, 112, 10, 10);
+    ellipse(326, 139, 10, 10);
+    ellipse(335, 75, 10, 10);
+    ellipse(383, 104, 10, 10);
+    ellipse(370, 24, 10, 10);
+    ellipse(383, 104, 10, 10); //Stars
+    
+    if (keyIsPressed && keyCode === UP) { 
+			gameBall.hop();
+		} else if (keyIsPressed && keyCode === DOWN){
+		    gameBall.fall();
+		}
+		noStroke();
+		gameBall.draw();
+		
+		for (var i = 0; i < obstacles3.length; i++){ //This for loop is using the obstacles3 array now!
+            obstacles3[i].draw();
+            gameBall.checkForObstacle(obstacles3[i]);
+            obstacles3[i].x -= 3.75; //Third level is even faster!
+             if (obstacles3[i].x < 10){
+                    obstaclesPassed++;
+                    obstacles3[i].x += 100000;
+                 }
+		}
+		
+		skipButton.draw();
+		
+		if (obstaclesPassed === 30){ //The new goal to advance is 30 obstacles!
+        currentScene++;
+        obstaclesPassed = 0;
+    }
+    
+    fill(250, 250, 250);
+    rect(0, 0, 87, 20);
+    fill(0, 0, 0);
+    text("Points: " + obstaclesPassed, 0, 0);
+    
+    fill(255, 252, 252);
+    rect(324, 0, 76, 20);
+    fill(0, 0, 0);
+    text("Goal: 30", 326, 0);
+}; //Space Level
+
+var winScreen = function(){
+    background(224, 159, 235);
+    if (skips === 0){ //This win screen appears when you dont use the skip button ever!
+        fill(234, 255, 0);
+        textSize(35);
+        text("CONGRATULATIONS!", 29, 14);
+        fill(242, 201, 17);
+        quad(80, 70, 320, 70, 260, 200, 140, 200);
+        fill(224, 159, 235);
+        quad(130, 70, 270, 70, 230, 100, 170, 100);
+        fill(230, 195, 37);
+        rect(175, 200, 50, 100);
+        fill(78, 79, 54);
+        rect(95, 300, 200, 50);
+        textSize(80);
+        fill(255, 0, 0);
+        text("#1", 159, 103);
+    } else if (skips === 1){ //This win screen appears when you use the skip button once
+        fill(175, 176, 160);
+        textSize(35);
+        text("CONGRATULATIONS!", 29, 14);
+        text("You skipped " + skips + " level!", 30, 350);
+        fill(184, 181, 170);
+        quad(80, 70, 320, 70, 260, 200, 140, 200);
+        fill(224, 159, 235);
+        quad(130, 70, 270, 70, 230, 100, 170, 100);
+        fill(168, 165, 153);
+        rect(175, 200, 50, 100);
+        fill(78, 79, 54);
+        rect(95, 300, 200, 50);
+        textSize(80);
+        fill(255, 0, 0);
+        text("#2", 159, 103);
+    } else if (skips === 2){ //This win screen appears when you use the skip button twice
+        fill(120, 91, 64);
+        textSize(35);
+        text("CONGRATULATIONS!", 29, 14);
+        text("You skipped " + skips + " levels!", 30, 350);
+        fill(181, 108, 60);
+        quad(80, 70, 320, 70, 260, 200, 140, 200);
+        fill(224, 159, 235);
+        quad(130, 70, 270, 70, 230, 100, 170, 100);
+        fill(168, 96, 40);
+        rect(175, 200, 50, 100);
+        fill(78, 79, 54);
+        rect(95, 300, 200, 50);
+        textSize(80);
+        fill(255, 0, 0);
+        text("#3", 159, 103);
+    } else if (skips === 3){ //This win screen appears when you skip all three levels!
+        fill(69, 120, 66);
+        textSize(35);
+        text("You can do better!", 54, 14);
+        text("You skipped " + skips + " levels!", 30, 350);
+        noStroke();
+        fill(89, 71, 50);
+        ellipse(195, 264, 183, 51);
+        fill(97, 79, 58);
+        ellipse(195, 239, 144, 33);
+        fill(115, 94, 69);
+        ellipse(204, 223, 105, 29);
+        fill(133, 108, 80);
+        ellipse(214, 211, 71, 12);
+        fill(156, 124, 91);
+        ellipse(221, 208, 64, 8);
+        stroke(86, 158, 93);
+        strokeWeight(5);
+        line(155, 171, 169, 134);
+        line(169, 134, 158, 106);
+        line(158, 106, 175, 72);
+        
+        line(155 + 35, 171, 169 + 35, 134);
+        line(169 + 35, 134, 158 + 35, 106);
+        line(158 + 35, 106, 175 + 35, 72);
+        
+        line(155 + 70, 171, 169 + 70, 134);
+        line(169 + 70, 134, 158 + 70, 106);
+        line(158 + 70, 106, 175 + 70, 72);
+        
+    }
+}; //Win Screen
+    
+
+/* /////////////////////////////////Mouse Clicked Function/////////////////////////////// */
+
+mouseClicked = function() {
+    if (currentScene === 0){
+	    startButton.handleMouseClick();
+	    helpButton.handleMouseClick();
+    } else if (currentScene === 1){
+	    backButton.handleMouseClick();
+    } else if (currentScene === 2){
+        skipButton.handleMouseClick();
+    } else if (currentScene === 3){
+        skipButton.handleMouseClick();
+    } else if (currentScene === 4){
+        skipButton.handleMouseClick();
+    } 
+}; //This tells the buttons to only work if they are in their respective scenes! These are based on the currentScene variable
+
+   
+/* /////////////////////////////////Draw Function//////////////////////////////////////// */
+
+var draw = function() {
+    if (currentScene === 0){
+        startScreen();
+    } else if (currentScene === 1){
+        helpScreen();
+    } else if (currentScene === 2){
+        levelOne();
+    } else if (currentScene === 3){
+        levelTwo();
+    } else if (currentScene === 4){
+        levelThree();
+    } else if (currentScene === 5){
+        winScreen();
+    }
+}; //This draw function actually draws all of the levels, the ball moving up and down, and the obstacles moving right to left! These are based on the currentScene variable.
