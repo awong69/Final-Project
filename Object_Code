@@ -1,0 +1,28 @@
+var Obstacle = function(x, y, h, hole, r, g, b) {
+	this.x = x;
+	this.y = y;
+	this.h = h;
+	this.hole = hole; // This controls the space between the two rectangles
+	this.r = r; //Red value
+	this.g = g; //Green value
+	this.b = b; //Blue value
+}; //Obstacle Constructor Function
+
+Obstacle.prototype.draw = function() {
+	noStroke();
+    fill(this.r, this.g, this.b);
+    rect(this.x, this.y, 30, this.h); //Bottom rectangle
+    rect(this.x, 0, 30, this.y - this.hole); // Top rectangle
+}; //Draw method that creates the obstacles
+	
+for (var i = 0; i < 200; i++) {
+	obstacles1.push(new Obstacle((200 * i) + 600, random(55, 350), 350, 70, 70, 130, 64));
+} //Pushes all the obstacles into the first level array at random y values. The fourth parameter controls how big the hole is for the level!
+
+for (var i = 0; i < 200; i++) {
+	obstacles2.push(new Obstacle((200 * i) + 600, random(55, 350), 350, 65, 64, 112, 58));
+} //Pushes all the obstacles into the second level array at random y values. The hole is a little smaller for this level.
+
+for (var i = 0; i < 200; i++) {
+	obstacles3.push(new Obstacle((200 * i) + 600, random(55, 350), 350, 50, 100, 0, 100));
+} //Pushes all the obstacles into the third level array at random y values. The hole is EVEN SMALLER for this one!
