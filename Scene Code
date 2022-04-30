@@ -1,0 +1,7 @@
+var currentScene = 0; // 0 = Start Menu, 1 = Help Menu, 2 = Day Level, 3 = Night level, 4 = Space Level, 5 = Win Screen
+var obstacles1 = []; // Obstacles for the first level
+var obstacles2 = []; // Obstacles for the second level
+var obstacles3 = []; // Obstacles for the third level
+var obstaclesPassed = 0; // Counts how many obstacles the ball passed
+var skips = 0; // Counts how many times the player uses the skip button
+
